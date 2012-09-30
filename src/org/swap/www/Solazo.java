@@ -83,7 +83,7 @@ public class Solazo extends Activity {
  
    	try{
 	     HttpClient httpclient = new DefaultHttpClient();
-	     HttpPost httppost = new HttpPost("localhost/weather/query.php");
+	     HttpPost httppost = new HttpPost("http://10.0.2.2/weather/query.php");
 	     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 	     HttpResponse response = httpclient.execute(httppost);
 	     HttpEntity entity = response.getEntity();
@@ -112,24 +112,28 @@ public class Solazo extends Activity {
 
 /*******************************************************************	
  * variables for return values from servers
-*******************************************************************/	  	
+*******************************************************************/
+  	
   	String[] output= new String[5];
+     //String output = "";
 	try{
 	      jArray = new JSONArray(result);
 	      JSONObject json_data=null;
+	     //output = json_data.getString("user_id");
 	      
 	      for(int i=0;i<jArray.length();i++){
 	             json_data = jArray.getJSONObject(i);
-	             output[i]=json_data.getString("output");
+	             output[i]=json_data.getString("test");
 	             
 	   
-	             //Toast.makeText(getBaseContext(), ct_id ,Toast.LENGTH_LONG).show();
+	             Toast.makeText(getBaseContext(), output[0] ,Toast.LENGTH_LONG).show();
 	             
 	      	}
-	      
+
+	       
 	      /*******************************************************************	
 	       * display stuff
-	      *******************************************************************/		 
+	      *******************************************************************		 
 	      //Toast.makeText(getBaseContext(), Double.toString(sc_distance[0]) ,Toast.LENGTH_LONG).show();
 	      Toast.makeText(getBaseContext(), output[0] ,Toast.LENGTH_LONG).show();
 	      /******************************************************************/
@@ -139,6 +143,7 @@ public class Solazo extends Activity {
 	    	  Toast.makeText(getBaseContext(), "sorry something went wrong.." ,Toast.LENGTH_LONG).show();
 	      } catch (ParseException e1) {
 				e1.printStackTrace();
+				
 		}  	
   	
   	
