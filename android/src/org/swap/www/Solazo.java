@@ -83,7 +83,7 @@ public class Solazo extends Activity {
  
    	try{
 	     HttpClient httpclient = new DefaultHttpClient();
-	     HttpPost httppost = new HttpPost("http://10.0.2.2/weather/query.php");
+	     HttpPost httppost = new HttpPost("http://10.0.2.2/weather/guess.php");
 	     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 	     HttpResponse response = httpclient.execute(httppost);
 	     HttpEntity entity = response.getEntity();
@@ -111,25 +111,30 @@ public class Solazo extends Activity {
   	//paring data
 
 /*******************************************************************	
- * variables for return values from servers
+ * variables for return values from servers, remember, php script can only print
+ * the values you need, no warnings, etc
 *******************************************************************/
   	
-  	String[] output= new String[5];
+  
+  	String[] temp= new String[5];
+  	//String[] humid= new String[5];
      //String output = "";
 	try{
 	      jArray = new JSONArray(result);
 	      JSONObject json_data=null;
-	     //output = json_data.getString("user_id");
+	      	     //output = json_data.getString("user_id");
 	      
 	      for(int i=0;i<jArray.length();i++){
 	             json_data = jArray.getJSONObject(i);
-	             output[i]=json_data.getString("test");
+	             temp[i]=json_data.getString("temp");
+	             //humid[i]=json_data.getString("humid");
 	             
-	   
-	             Toast.makeText(getBaseContext(), output[0] ,Toast.LENGTH_LONG).show();
+	          /*******************************************************************	
+	   	       display stuff, for debugging..
+	   	      *******************************************************************/		 
+	             Toast.makeText(getBaseContext(), temp[0] ,Toast.LENGTH_LONG).show();
 	             
 	      	}
-
 	       
 	      /*******************************************************************	
 	       * display stuff
@@ -140,7 +145,7 @@ public class Solazo extends Activity {
 	      
 	      }
 	      catch(JSONException e1){
-	    	  Toast.makeText(getBaseContext(), "sorry something went wrong.." ,Toast.LENGTH_LONG).show();
+	    	  Toast.makeText(getBaseContext(), "oops...something went wrong :(" ,Toast.LENGTH_LONG).show();
 	      } catch (ParseException e1) {
 				e1.printStackTrace();
 				
