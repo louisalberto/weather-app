@@ -273,10 +273,12 @@ $wbug_humid=$xml->channel->children($var)->children($var)->ob->humidity;
 
 //echo $argv[1];
 //echo $noaa_temp, $wg_temp, $wbug_temp;
-$output = array();
-exec("python approx-weather.py $noaa_temp $wg_temp $wbug_temp", $output);
-//var_dump($output);
+//$output = array();
+exec("python approx-weather.py $noaa_temp $wg_temp $wbug_temp $noaa_humid $wbug_humid $wg_humid", $output);
 
+/*ehh..comes back as string, so just broke it apart in php, this should be done more efficiently at some point*/
+$output = explode(' ', $output[0]);
+//print_r($output[1]);
 
 
 /*store user data*/
@@ -319,7 +321,7 @@ echo $wg_humid;
 //echo '<br>';
 
 $best[0]["temp"] = $output[0];
-//$best["humid"] = 0;
+$best[0]["humid"] = $output[1];
 print json_encode($best);
 
 /********************************************************************************
