@@ -58,8 +58,8 @@ public class Solazo extends Activity {
 /***********************************************************************	
     	 * here's long and latitude, just set your vars equal to these
 ************************************************************************/
-    	double latitude = 30.3;
-    	double longitude = 97.7;
+    	double latitude = 44.943999;
+    	double longitude = -73.605117;
 /***********************************************************************/
     	
     	
@@ -114,10 +114,15 @@ public class Solazo extends Activity {
  * variables for return values from servers, remember, php script can only print
  * the values you need, no warnings, etc
 *******************************************************************/
-  	
-  
+  	 
   	String[] temp= new String[5];
-  	//String[] humid= new String[5];
+  	String[] humid= new String[5];
+  	String[] noaa_station= new String[5];
+  	String[] noaa_distance= new String[5];
+  	String[] noaa_temp= new String[5];
+  	String[] noaa_humid= new String[5];
+ /***********************************************************************/
+
      //String output = "";
 	try{
 	      jArray = new JSONArray(result);
@@ -127,12 +132,15 @@ public class Solazo extends Activity {
 	      for(int i=0;i<jArray.length();i++){
 	             json_data = jArray.getJSONObject(i);
 	             temp[i]=json_data.getString("temp");
-	             //humid[i]=json_data.getString("humid");
-	             
+	             humid[i]=json_data.getString("humid");
+	             noaa_station[i]=json_data.getString("noaa_station");
+	             noaa_distance[i]=json_data.getString("noaa_distance");
+	             noaa_temp[i]=json_data.getString("noaa_temp");
+	             noaa_humid[i]=json_data.getString("noaa_humid");
 	          /*******************************************************************	
 	   	       display stuff, for debugging..
 	   	      *******************************************************************/		 
-	             Toast.makeText(getBaseContext(), temp[0] ,Toast.LENGTH_LONG).show();
+	             Toast.makeText(getBaseContext(), noaa_distance[0] ,Toast.LENGTH_LONG).show();
 	             
 	      	}
 	       

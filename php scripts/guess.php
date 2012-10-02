@@ -152,7 +152,7 @@ return null;
 here's the variables for the best guessed temperature and humidty.
 ************************************************************/
 
-$best = array(array( 'temp'=>0/*, 'humid'=>"0"*/));
+$best = array(array( 'temp'=>0, 'humid'=>0));
 /***********************************************************
 
 
@@ -168,13 +168,14 @@ $best = array(array( 'temp'=>0/*, 'humid'=>"0"*/));
 
 /*get lat/long from android app*/
 
-$lat =44.943999;
-$long =-73.605117;
+#$lat =44.943999;
+#$long =-73.605117;
 
-//$lat = $_POST["c_latitude"];
-//$long = $_POST["c_longitude"];
+$lat = $_POST["c_latitude"];
+$long = $_POST["c_longitude"];
 
-$date_time = date ('2012-09-10 12:12:00');
+/*date_time needed for user input, so moved to another script now*/
+//$date_time = date ('2012-09-10 12:12:00');
 //print $date_time;
 
 /***********************************************************
@@ -320,8 +321,14 @@ echo $wg_humid;
 **************************************************************/
 //echo '<br>';
 
+
+/* Put this in a loop if there are multiple layers of results*/
 $best[0]["temp"] = $output[0];
 $best[0]["humid"] = $output[1];
+$best[0]["noaa_station"] = $noaa_station; 
+$best[0]["noaa_distance"] =(string)$noaa_distance ;
+$best[0]["noaa_temp"] = (string)$noaa_temp;
+$best[0]["noaa_humid"] =(string)$noaa_humid;  
 print json_encode($best);
 
 /********************************************************************************
