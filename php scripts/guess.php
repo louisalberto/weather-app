@@ -16,8 +16,8 @@ return $xml;
 /*connect to mysql and execute query*/
 function query_mysql($query){
 $output = array();
-mysql_connect("localhost","root","lg7838");
-mysql_select_db("weather");
+mysql_connect("localhost","solazoor_root","da1055");
+mysql_select_db("solazoor_weather");
 $sql=mysql_query($query);
 while($row=mysql_fetch_assoc($sql))
 $output[]=$row;
@@ -61,9 +61,21 @@ $noaa_local = query_mysql($query);
 
 
 $noaa_station = $noaa_local[0]["station_id"];
-$noaa_distance = round($noaa_local[0]["distance"], 3, PHP_ROUND_HALF_UP);
+
+/********************************************************************************
+Uncomment this for php > 5.3
+**********************************************************************************/
+//$noaa_distance = round($noaa_local[0]["distance"], 3, PHP_ROUND_HALF_UP);
+
+
+/********************************************************************************
+Uncomment this for php < 5.3
+**********************************************************************************/
+$noaa_distance = round($noaa_local[0]["distance"], 3);
+
 //echo $noaa_distance;
 return array($noaa_station,$noaa_distance); 
+
 }
 
 
@@ -168,8 +180,8 @@ $best = array(array( 'temp'=>0, 'humid'=>0));
 
 /*get lat/long from android app*/
 
-#$lat =44.943999;
-#$long =-73.605117;
+//$lat =44.943999;
+//$long =-73.605117;
 
 $lat = $_POST["c_latitude"];
 $long = $_POST["c_longitude"];
@@ -181,7 +193,7 @@ $long = $_POST["c_longitude"];
 /***********************************************************
 for debugging $lat, $long, comment out for production 
 ***********************************************************/
-//writefile($lat);
+writefile($lat);
 /***********************************************************/
 
 /***********************************************************
@@ -246,7 +258,8 @@ else {
 //$xml = simplexml_load_file('http://www.weather.gov/xml/current_obs/'.$noaa_local.'.xml');
 //$link = 'http://www.weather.gov/xml/current_obs/'.$noaa_local.'.xml';
 
-$xml = xml_string('http://www.weather.gov/xml/current_obs/'.$noaa_station.'.xml');
+
+$xml = xml_string('http://w1.weather.gov/xml/current_obs/'.$noaa_station.'.xml');
 
    $noaa_temp = $xml->children()->temp_f;
    $noaa_humid = $xml->children()->relative_humidity;
