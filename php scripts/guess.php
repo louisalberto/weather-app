@@ -16,8 +16,16 @@ return $xml;
 /*connect to mysql and execute query*/
 function query_mysql($query){
 $output = array();
-mysql_connect("localhost","solazoor_root","da1055");
+
+/****************uncomment for webhost****************************/
+mysql_connect("localhost","solazoor_","");
 mysql_select_db("solazoor_weather");
+
+/****************uncomment for for my local machine********************/
+//mysql_connect("localhost","root","");
+//mysql_select_db("weather");
+
+
 $sql=mysql_query($query);
 while($row=mysql_fetch_assoc($sql))
 $output[]=$row;
@@ -180,11 +188,11 @@ $best = array(array( 'temp'=>0, 'humid'=>0));
 
 /*get lat/long from android app*/
 
-//$lat =44.943999;
-//$long =-73.605117;
+$lat =44.943999;
+$long =-73.605117;
 
-$lat = $_POST["c_latitude"];
-$long = $_POST["c_longitude"];
+//$lat = $_POST["c_latitude"];
+//$long = $_POST["c_longitude"];
 
 /*date_time needed for user input, so moved to another script now*/
 //$date_time = date ('2012-09-10 12:12:00');
@@ -200,6 +208,7 @@ for debugging $lat, $long, comment out for production
 this is the min distance for searching exisiting user data
 ***********************************************************/
 $threshold = 100;
+$wwo_key = "912adc6cee051628121310";
 
 /***************************************************************************************
 Start Main Program here
@@ -251,7 +260,14 @@ else {
 /**************************************************************/
 /**************************************************************/
 
+/*get worldweatheronline data*/
 
+//http://free.worldweatheronline.com/feed/weather.ashx?key=912adc6cee051628121310&q=44.943999,-73.605117&format=xml
+$xml = xml_string('http://free.worldweatheronline.com/feed/weather.ashx?key=' .$wwo_key. '&q='.$lat.','.$long.'&format=xml');
+//var_dump($xml);
+$wwo_temp = $xml->children()->current_condition->temp_F;
+$wwo_humid = $xml->children()->current_condition->humidity;
+/**************************************************************/
 
 /*get noaa data*/
 
@@ -270,10 +286,10 @@ $xml = xml_string('http://w1.weather.gov/xml/current_obs/'.$noaa_station.'.xml')
 
 //$xml = simplexml_load_file('http://api.wunderground.com/api/1d165c1bb8bb4db2/conditions/q/'.$lat.','.$long.'.xml');
 
-$xml = xml_string('http://api.wunderground.com/api/1d165c1bb8bb4db2/conditions/q/'.$lat.','.$long.'.xml');
+//$xml = xml_string('http://api.wunderground.com/api/1d165c1bb8bb4db2/conditions/q/'.$lat.','.$long.'.xml');
 
-$wg_temp=$xml->children()->current_observation->children()->temp_f;
-$wg_humid=(int)$xml->children()->current_observation->children()->relative_humidity;
+//$wg_temp=$xml->children()->current_observation->children()->temp_f;
+//$wg_humid=(int)$xml->children()->current_observation->children()->relative_humidity;
 
 
 /**************************************************************/
@@ -285,10 +301,13 @@ $xml = xml_string('http://api.wxbug.net/getLiveWeatherRSS.aspx?ACode=A5565943685
 $wbug_temp = $xml->channel->children($var)->children($var)->ob->temp;
 $wbug_humid=$xml->channel->children($var)->children($var)->ob->humidity;
 
+
+/**************************************************************/
+
 //echo $argv[1];
 //echo $noaa_temp, $wg_temp, $wbug_temp;
 //$output = array();
-exec("python approx-weather.py $noaa_temp $wg_temp $wbug_temp $noaa_humid $wbug_humid $wg_humid", $output);
+exec("python approx-weather.py $noaa_temp $wwo_temp $wbug_temp $noaa_humid $wbug_humid $wwo_humid", $output);
 
 /*ehh..comes back as string, so just broke it apart in php, this should be done more efficiently at some point*/
 $output = explode(' ', $output[0]);
@@ -339,7 +358,7 @@ echo $wg_humid;
 $best[0]["temp"] = $output[0];
 $best[0]["humid"] = $output[1];
 $best[0]["noaa_station"] = $noaa_station; 
-$best[0]["noaa_distance"] =(string)$noaa_distance ;
+$best[0]["noaa_distance"] =(string)round($noaa_distance, 2);
 $best[0]["noaa_temp"] = (string)$noaa_temp;
 $best[0]["noaa_humid"] =(string)$noaa_humid;  
 print json_encode($best);
